@@ -200,10 +200,10 @@ subject_text.grid(row=2,column=1,sticky=W,padx=10)
 message_text = tkinter.Text(canvas,height=10,width=44) 
 message_text.grid(row=6,columnspan=2,sticky=W,padx=10,pady=5)
 
-attachment = tkinter.Button(canvas,text="Attach File",bg='#000080',fg="#FFFFFF",command=add_attachment)
+attachment = tkinter.Button(canvas,text="Attach File",bg='#C0C0C0',fg="#000000",command=add_attachment)
 attachment.grid(row=11,column=0,sticky=W,padx=10)
 
-proceed = tkinter.Button(canvas,text="Proceed",bg='#000080',fg="#FFFFFF",command=send_window_process)
+proceed = tkinter.Button(canvas,text="Proceed",bg='#C0C0C0',fg="#000000",command=send_window_process)
 proceed.grid(row=11,column=1,sticky=E)
 
 window.mainloop()
