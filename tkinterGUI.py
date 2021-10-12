@@ -3,7 +3,7 @@
 # Give access to third part apps in gmail security settings
 # Install smtp library using 'pip install secure-smtplib' command in command prompt 
 import tkinter
-from tkinter import filedialog,ttk
+from tkinter import StringVar, filedialog,ttk
 from tkinter.constants import DISABLED, E, NW, W, X
 from email.mime.multipart import MIMEMultipart
 import smtplib,socket
@@ -61,7 +61,7 @@ def send(server,msg):
     # send the message via the server set up earlier.
     server.send_message(msg)
     del msg
-    print("Successful")
+    
     
 def send_email():
     from tkinter import messagebox
@@ -71,7 +71,7 @@ def send_email():
         msg = create_email(address)
         send(server,msg)
         add_attachments(attachments_list)
-        
+        print("Successful")
         print(str(subject_text.get("1.0",'end-1c')))
         print(str(message_text.get("1.0",'end-1c')))
         print(str(recipient_email_str.get()))
@@ -94,6 +94,10 @@ def send_email():
         error = "An error occured"
         tkinter.messagebox.showerror(title="Error", message=error)
         print(error)
+    
+
+    
+
         
 def show_attachments(): 
     from tkinter import messagebox
@@ -164,7 +168,7 @@ def add_attachments(attachments):
                 for i in range(os.path.getsize(filename)):
                     progressbar["value"] = progressbar["value"]+1
                     progressbar["maximum"] = filesize
-                    label.config(text="Uploading "+filename+str(int(progressbar["value"]/os.path.getsize(filename)*100)) + "%")          
+                    label.config(text="Uploading "+filename+" -> "+str(int(progressbar["value"]/os.path.getsize(filename)*100)) + "%")          
                     canvas.update_idletasks()
                     #time.sleep(1) 
                 progressbar["value"]=0
@@ -180,7 +184,7 @@ def send_window_process():
     print(str(recipient_email_str.get()))
     print()
     print("Top Level")
-
+    
     # new window for login process 
     loginWindow = tkinter.Toplevel(master=canvas)
     loginWindow.grab_set() # to prevent access to main window
@@ -198,10 +202,18 @@ def send_window_process():
 
     password = tkinter.Label(loginWindow,text="Password",bg='#000080',fg="#FFFFFF")
     password.grid(row=2, column=0,sticky=W, pady=5,  ipadx='5px',padx=10) 
-    password_text = tkinter.Entry(loginWindow,width=25,textvariable=password_str,show='*')
-    password_text.grid(row=2,column=1,sticky=W,padx=10)
+    password_entry = tkinter.Entry(loginWindow,width=25,textvariable=password_str,show='*')
+    password_entry.grid(row=2,column=1,sticky=W,padx=10)
 
-    send = tkinter.Button(loginWindow,text="Send",bg='#000080',fg="#FFFFFF",command=send_email)
+    def confirm():
+        msg_box = tkinter.messagebox.askquestion("Confirmation","From: "+str(str(sender_email_str.get())+"\n"+"To: "+str(str(recipient_email_str.get())+"\n"+"Subject: "+subject_text.get("1.0",'end-1c'))+"\n"+"Message: "+str(message_text.get("1.0",'end-1c'))+"\n\n"+"Are you sure you want to send this email?"))
+        if msg_box=='yes':
+            send.config(state=DISABLED)
+            send_email()
+        else:
+            loginWindow.destroy()
+
+    send = tkinter.Button(loginWindow,text="Send",bg='#000080',fg="#FFFFFF",command=confirm)
     send.grid(row=3,column=2,sticky=W)
 
 
