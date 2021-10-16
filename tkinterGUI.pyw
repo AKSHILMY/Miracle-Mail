@@ -181,103 +181,100 @@ def add_attachments(attachments):
    
 
 def send_window_process():
-    print(str(subject_text.get("1.0",'end-1c'))=="")
+    print(str(subject_text.get("1.0",'end-1c')))
     print(str(message_text.get("1.0",'end-1c')))
-    print(str(recipient_email_str.get())=="")
+    print(str(recipient_email_str.get()))
     print()
     print("Top Level")
+    
+    # new window for login process 
+    loginWindow = tkinter.Toplevel(master=canvas)
+    loginWindow.grab_set() # to prevent access to main window
+    loginWindow.title("Login")
+    loginWindow.geometry("440x100")
+    loginWindow.config(background="#000000")
+    loginWindow.resizable(0,0)
+    img2=tkinter.PhotoImage(file=dir+"\miraclemaillogo.png")
+    loginWindow.iconphoto(False,img2)
+    
+    sender_email_address = tkinter.Label(loginWindow,text="Email of Sender: ",bg='#000080',fg="#FFFFFF")
+    sender_email_address.grid(row=1, column=0, sticky=W, pady=10,  ipadx='5px',padx=10)
+    sender_email_address_entry = tkinter.Entry(loginWindow,width=40,textvariable=sender_email_str)
+    sender_email_address_entry.grid(row=1,column=1,sticky=W,padx=10)
 
-    if (str(recipient_email_str.get())==""):
-        tkinter.messagebox.showerror(title="Error", message="Recipient email address required!")
-    elif (str(subject_text.get("1.0",'end-1c'))==""):
-        tkinter.messagebox.showerror(title="Error", message="Subject of the email required!")
-    else:
-        # new window for login process 
-        loginWindow = tkinter.Toplevel(master=canvas)
-        loginWindow.grab_set() # to prevent access to main window
-        loginWindow.title("Login")
-        loginWindow.geometry("440x100")
-        loginWindow.config(background="#000000")
-        loginWindow.resizable(0,0)
-        img2=tkinter.PhotoImage(file=dir+IMG)
-        loginWindow.iconphoto(False,img2)
-        
-        sender_email_address = tkinter.Label(loginWindow,text="Email of Sender: ",bg='#000080',fg="#FFFFFF")
-        sender_email_address.grid(row=1, column=0, sticky=W, pady=10,  ipadx='5px',padx=10)
-        sender_email_address_entry = tkinter.Entry(loginWindow,width=40,textvariable=sender_email_str)
-        sender_email_address_entry.grid(row=1,column=1,sticky=W,padx=10)
+    password = tkinter.Label(loginWindow,text="Password",bg='#000080',fg="#FFFFFF")
+    password.grid(row=2, column=0,sticky=W, pady=5,  ipadx='5px',padx=10) 
+    password_entry = tkinter.Entry(loginWindow,width=25,textvariable=password_str,show='*')
+    password_entry.grid(row=2,column=1,sticky=W,padx=10)
 
-        password = tkinter.Label(loginWindow,text="Password",bg='#000080',fg="#FFFFFF")
-        password.grid(row=2, column=0,sticky=W, pady=5,  ipadx='5px',padx=10) 
-        password_entry = tkinter.Entry(loginWindow,width=25,textvariable=password_str,show='*')
-        password_entry.grid(row=2,column=1,sticky=W,padx=10)
+    def confirm():
+        msg_box = tkinter.messagebox.askquestion("Confirmation","From: "+str(str(sender_email_str.get())+"\n"+"To: "+str(str(recipient_email_str.get())+"\n"+"Subject: "+subject_text.get("1.0",'end-1c'))+"\n"+"Message: "+str(message_text.get("1.0",'end-1c'))+"\n\n"+"Are you sure you want to send this email?"))
+        if msg_box=='yes':
+            send.config(state=DISABLED)
+            send_email()
+        else:
+            loginWindow.destroy()
 
-        def confirm():
-            msg_box = tkinter.messagebox.askquestion("Confirmation","From: "+str(str(sender_email_str.get())+"\n"+"To: "+str(str(recipient_email_str.get())+"\n"+"Subject: "+subject_text.get("1.0",'end-1c'))+"\n"+"Message: "+str(message_text.get("1.0",'end-1c'))+"\n\n"+"Are you sure you want to send this email?"))
-            if msg_box=='yes':
-                send.config(state=DISABLED)
-                send_email()
-            else:
-                loginWindow.destroy()
-
-        send = tkinter.Button(loginWindow,text="Send",bg='#000080',fg="#FFFFFF",command=confirm)
-        send.grid(row=3,column=2,sticky=W)
+    send = tkinter.Button(loginWindow,text="Send",bg='#000080',fg="#FFFFFF",command=confirm)
+    send.grid(row=3,column=2,sticky=W)
 
 
 
-        
+    
 # GUI
-IMG = "\miraclemaillogo.png"
+if __name__ == "__main__":
 
-icon = tkinter.PhotoImage(file=dir+"/background.png")
+    
+    
+    icon = tkinter.PhotoImage(file=dir+"/background.png")
 
-canvas = tkinter.Canvas(window,width=width,height=height,background="#000000")
-canvas.pack(fill='both',expand=True)
-canvas.create_image(0,0,image=icon,anchor=NW)
+    canvas = tkinter.Canvas(window,width=width,height=height,background="#000000")
+    canvas.pack(fill='both',expand=True)
+    canvas.create_image(0,0,image=icon,anchor=NW)
 
-img1=tkinter.PhotoImage(master=window,file=dir+IMG)
-window.iconphoto(False,img1)
+    img1=tkinter.PhotoImage(master=window,file=dir+"\miraclemaillogo.png")
+    window.iconphoto(False,img1)
 
-img2=tkinter.PhotoImage(master=canvas,file=dir+IMG)
+    img2=tkinter.PhotoImage(master=canvas,file=dir+"\miraclemaillogo.png")
 
-logo_label = tkinter.Label(canvas,image=img2)
-logo_label.grid(row=0,column=0,sticky=W,pady=10,padx=60)
-
-
-brand_label = tkinter.Label(canvas, text="MIRACLE MAIL", bg="#171717",fg='#ffffff', font='arial 20 bold')
-brand_label.grid(row=0, column=1, sticky=W, pady=2, padx='15px')
-
-recipient_email_label = tkinter.Label(canvas,text="Email of Recipient: ",bg='#000080',fg="#FFFFFF")
-subject_label = tkinter.Label(canvas,text="Subject",bg='#000080',fg="#FFFFFF")
-msg_label = tkinter.Label(canvas,text="Message",bg='#000080',fg="#FFFFFF")
-
-recipient_email_label.grid(row=1, column=0, sticky=W, pady=5,  ipadx='5px',padx=10)
-subject_label.grid(row=2, column=0,sticky=W, pady=5,  ipadx='5px',padx=10) 
-msg_label.grid(row=3,column=0,sticky=W, pady=5,  ipadx='5px',padx=10)
-
-email_address_entry = tkinter.Entry(canvas,width=30,textvariable=recipient_email_str)
-email_address_entry.grid(row=1,column=1,sticky=W,padx=10)
-
-# verify = tkinter.Button(canvas,text="Verify Email address",bg='#000080',fg="#FFFFFF",command=verify_email)
-# verify.grid(row=1,column=3,sticky=W,padx=10)
-
-subject_text = tkinter.Text(canvas,height=1,width=30)
-subject_text.grid(row=2,column=1,sticky=W,padx=10)
-
-message_text = tkinter.Text(canvas,height=10,width=44) 
-message_text.grid(row=6,columnspan=2,sticky=W,padx=10,pady=5)
-
-attachment_button = tkinter.Button(canvas,text="Attach File",bg='#C0C0C0',fg="#000000",command=choose_attachments)
-attachment_button.grid(row=11,column=0,sticky=W,padx=10)
-
-proceed_button = tkinter.Button(canvas,text="Proceed",bg='#C0C0C0',fg="#000000",command=send_window_process)
-proceed_button.grid(row=11,column=1,sticky=E)
-
-files_button = tkinter.Button(canvas,text="...",bg='#C0C0C0',fg="#000000",command=show_attachments,height=1,width=3)
-files_button.grid(row=12,column=0,sticky=W,padx=10)
+    logo_label = tkinter.Label(canvas,image=img2)
+    logo_label.grid(row=0,column=0,sticky=W,pady=10,padx=60)
 
 
-window.mainloop()
+    brand_label = tkinter.Label(canvas, text="MIRACLE MAIL", bg="#171717",fg='#ffffff', font='arial 20 bold')
+    brand_label.grid(row=0, column=1, sticky=W, pady=2, padx='15px')
+
+    recipient_email_label = tkinter.Label(canvas,text="Email of Recipient: ",bg='#000080',fg="#FFFFFF")
+    subject_label = tkinter.Label(canvas,text="Subject",bg='#000080',fg="#FFFFFF")
+    msg_label = tkinter.Label(canvas,text="Message",bg='#000080',fg="#FFFFFF")
+
+    recipient_email_label.grid(row=1, column=0, sticky=W, pady=5,  ipadx='5px',padx=10)
+    subject_label.grid(row=2, column=0,sticky=W, pady=5,  ipadx='5px',padx=10) 
+    msg_label.grid(row=3,column=0,sticky=W, pady=5,  ipadx='5px',padx=10)
+
+    email_address_entry = tkinter.Entry(canvas,width=30,textvariable=recipient_email_str)
+    email_address_entry.grid(row=1,column=1,sticky=W,padx=10)
+
+    # verify = tkinter.Button(canvas,text="Verify Email address",bg='#000080',fg="#FFFFFF",command=verify_email)
+    # verify.grid(row=1,column=3,sticky=W,padx=10)
+
+    subject_text = tkinter.Text(canvas,height=1,width=30)
+    subject_text.grid(row=2,column=1,sticky=W,padx=10)
+
+    message_text = tkinter.Text(canvas,height=10,width=44) 
+    message_text.grid(row=6,columnspan=2,sticky=W,padx=10,pady=5)
+
+    attachment_button = tkinter.Button(canvas,text="Attach File",bg='#C0C0C0',fg="#000000",command=choose_attachments)
+    attachment_button.grid(row=11,column=0,sticky=W,padx=10)
+
+    proceed_button = tkinter.Button(canvas,text="Proceed",bg='#C0C0C0',fg="#000000",command=send_window_process)
+    proceed_button.grid(row=11,column=1,sticky=E)
+
+    files_button = tkinter.Button(canvas,text="...",bg='#C0C0C0',fg="#000000",command=show_attachments,height=1,width=3)
+    files_button.grid(row=12,column=0,sticky=W,padx=10)
+
+
+    window.mainloop()
 
 
 
